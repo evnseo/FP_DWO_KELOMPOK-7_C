@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<Schema name="dw_sales">
+<!--
+  == This software is subject to the terms of the Eclipse Public License v1.0
+  == Agreement, available at the following URL:
+  == http://www.eclipse.org/legal/epl-v10.html.
+  == You must accept the terms of that agreement to use this software.
+  ==
+  == Copyright (C) 2000-2005 Julian Hyde
+  == Copyright (C) 2005-2011 Pentaho and others
+  == All Rights Reserved.
+  -->
+
+<!-- Shared dimensions -->
+
+  
+
+<!-- Sales -->
+<Cube name="sales" defaultMeasure="Line total">
+  <!-- Use annotations to provide translations of this cube's caption and
+       description into German and French. Use of annotations in this manner is
+       experimental and unsupported; just for testing right now. -->
+  
+  <Table name="sales"/>
+
+<Dimension name="TIme" foreignKey="time_id">
+    <Hierarchy hasAll="true" allMemberName="All Times" primaryKey="time_id">
+      <Table name="time" />
+      <Level name="Year" column="tahun" type="Numeric" uniqueMembers="true"
+          levelType="TimeYears"/>
+      <Level name="Month" column="bulan" uniqueMembers="false" type="Numeric"
+          levelType="TimeMonths"/>
+      <Level name="Date" column="tanggal" uniqueMembers="false" type="Numeric"
+          levelType="TimeDays"/>
+    </Hierarchy>
+</Dimension>
+
+<Dimension name="Product" foreignKey ="ProductID">
+      <Hierarchy hasAll="true" allMemberName="All Products" primaryKey ="ProductID">
+        <Table name="dim_product"/>
+        <Level name="Product Category" column="CategoryName"/>
+        <Level name="Product SubCategory" column="SubCategoryName"/>
+        <Level name="Name" column="Name"/>
+      </Hierarchy>
+</Dimension>
+
+  <Dimension name="Territory" foreignKey = "TerritoryID">
+    <Hierarchy hasAll="true" allMemberName="All Territory" primaryKey ="TerritoryID">
+      <Table name="dim_teritori" />
+      <Level name="Group" column="Group"/>
+      <Level name="Country" column="CountryRegionCode"/>
+      <Level name="Name" column="Name"/>
+    </Hierarchy>
+  </Dimension>
+
+  
+
+  <Measure name="Line total" column="linetotal" aggregator="sum"
+      formatString="Standard"/>
+  
+</Cube>
+
+
+
+</Schema>
