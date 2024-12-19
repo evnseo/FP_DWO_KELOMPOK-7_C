@@ -104,109 +104,7 @@ require 'koneksi.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4 mb-4">Dashboard</h1>
-                    <div class="row">
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-center">
-                                                Total Biaya Purchasing </div>
-                                                    <?php
-                                                    $sql = "SELECT SUM(Biaya_purchasing) AS total_pembelian FROM purchasing";
-                                                    $result = mysqli_query($connection, $sql);
-                                                    $row = mysqli_fetch_assoc($result);
-                                                    $totalPembelian = $row['total_pembelian'];
-                                                    ?>
-                                                    <div class="h5 mb-0 font-weight-bold text-primary text-center"><?php echo number_format($totalPembelian); ?></div>
-                                        </div>
-                                        <!-- <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-center">
-                                                Total Jumlah Produk</div>
-                                                <?php
-                                                    $sql = "SELECT SUM(ProductId) AS total_product FROM purchasing";
-                                                    $result = mysqli_query($connection, $sql);
-                                                    $row = mysqli_fetch_assoc($result);
-                                                    $totalHarga = $row['total_product'];
-                                                    ?>
-                                                    <div class="h5 mb-0 text-primary text-center"><?php echo number_format($totalHarga); ?></div>
-                                        </div>
-                                        <!-- <div class="col-auto">
-                                            <i class="fas fa-chart-area fa-2x text-gray-300"></i>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-center">
-                                                Total Sales
-                                            </div>
-                                                <?php
-                                                    $sql = "SELECT COUNT(linetotal) AS total FROM sales";
-                                                    $result = mysqli_query($connection, $sql);
-                                                    $row = mysqli_fetch_assoc($result);
-                                                    $totalVendor = $row['total'];
-                                                    ?>
-                                                    <div class="h5 mb-0 text-primary text-center"><?php echo number_format($totalVendor); ?></div>
-                                        </div>
-                                        <!-- <div class="col-auto">
-                                            <i class="fas fa-chart-area fa-2x text-gray-300"></i>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center text-center">
-                                        <div class="col mr-2 text-center text-uppercase mb-1">
-                                            Total Terrtitory
-                                        </div>
-                                        <?php
-                                            $sql = "SELECT COUNT(TerritoryID) AS total FROM dim_teritori";
-                                            $result = mysqli_query($connection, $sql);
-                                            $row = mysqli_fetch_assoc($result);
-                                            $totalVendor = $row['total'];
-                                            ?>
-                                            
-                                                
-                                            <div class="h5 mb-0 text-primary text-center"><?php echo $totalVendor; ?>
-                                            </div>
-                                            
-                                        <!-- <div class="col-auto">
-                                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 class="mt-4 mb-4">Purchasing Cost</h1>
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="card mb-4">
@@ -269,176 +167,21 @@ require 'koneksi.php';
                                     }
                                 },
                                 series: [{
-                                    name: 'Biaya Purchasing',
+                                    name: 'Purchasing Cost',
                                     data: <?php echo json_encode($seriesData); ?> // Data dari PHP
                                 }]
                             });
                         });
                         </script>
 
-
-                        <!-- HTML code for the chart -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header text-uppercase">
-                                    Top Vendors
-                                </div>
-                                <div class="card-body">
-                                    <div id="topVendorsChart" style="width: 100%; height: 450px;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php
-                            // Fetch the top vendors from the database
-                            $sql = "SELECT dv.Name AS nama_vendor, COUNT(fvb.VendorID) as total_pembelian
-                                    FROM purchasing fvb
-                                    JOIN dim_vendor dv ON dv.VendorID = fvb.VendorID
-                                    GROUP BY dv.Name
-                                    ORDER BY COUNT(fvb.VendorID) DESC
-                                    LIMIT 5";
-                            $result = mysqli_query($connection, $sql);
-
-                            $categories = [];
-                            $seriesData = [];
-
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $categories[] = $row['nama_vendor'];
-                                $seriesData[] = (int)$row['total_pembelian']; // Pastikan tipe data integer
-                            }
-                        ?>
-
-
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                Highcharts.chart('topVendorsChart', {
-                                    chart: {
-                                        type: 'bar',
-                                        height: 500 // Tinggi grafik dalam piksel
-                                    },
-                                    title: {
-                                        text: ''
-                                    },
-                                    xAxis: {
-                                        categories: <?php echo json_encode($categories); ?>, // Nama vendor dari PHP
-                                        title: {
-                                            text: 'Vendors'
-                                        }
-                                    },
-                                    yAxis: {
-                                        min: 0,
-                                        title: {
-                                            text: 'Total Purchases'
-                                        },
-                                        labels: {
-                                            overflow: 'justify'
-                                        }
-                                    },
-                                    tooltip: {
-                                        valueSuffix: ' purchases'
-                                    },
-                                    plotOptions: {
-                                        bar: {
-                                            dataLabels: {
-                                                enabled: true
-                                            }
-                                        }
-                                    },
-                                    series: [{
-                                        name: 'Total Purchases',
-                                        data: <?php echo json_encode($seriesData); ?> // Data pembelian dari PHP
-                                    }]
-                                });
-                            });
-                        </script>
-                        <!-- HTML code for the chart -->
-                        <div class="col-xl-6">
-                            <div class="card shadow mb-4">
-                                <div class="card-header">
-                                    <h6 class="text-uppercase">Top 5 Territory Sales in 2003</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div id="highchartPieContainer" style="height: 400px;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php
-                            // Assuming you have already established the database connection
-
-                            // Fetch the top cities based on the total amount of purchases
-                            $sql = "SELECT dt.Name as name, SUM(f.linetotal) as total
-                                    FROM sales f
-                                    JOIN dim_teritori dt ON dt.TerritoryID = f.TerritoryID
-                                    JOIN time t ON t.time_id = f.time_id
-                                    WHERE t.TAHUN='2003'
-                                    GROUP BY dt.Name
-                                    ORDER BY SUM(f.linetotal) DESC
-                                    LIMIT 5";
-
-                            $result = mysqli_query($connection, $sql);
-
-                            $data = array();
-
-                            // Process the fetched data into Highcharts format
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $data[] = array(
-                                    'name' => $row['name'],
-                                    'y' => (float) $row['total'] // Ensure the total is a float
-                                );
-                            }
-                        ?>
-
-                        <!-- Load Highcharts Library -->
-                        <script src="https://code.highcharts.com/highcharts.js"></script>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                // Highcharts configuration
-                                Highcharts.chart('highchartPieContainer', {
-                                    chart: {
-                                        plotBackgroundColor: null,
-                                        plotBorderWidth: null,
-                                        plotShadow: false,
-                                        type: 'pie'
-                                    },
-                                    title: {
-                                        text: ''
-                                    },
-                                    tooltip: {
-                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                    },
-                                    accessibility: {
-                                        point: {
-                                            valueSuffix: '%'
-                                        }
-                                    },
-                                    plotOptions: {
-                                        pie: {
-                                            allowPointSelect: true,
-                                            cursor: 'pointer',
-                                            dataLabels: {
-                                                enabled: false
-                                            },
-                                            showInLegend: true
-                                        }
-                                    },
-                                    series: [{
-                                        name: 'Sales',
-                                        colorByPoint: true,
-                                        data: <?php echo json_encode($data); ?>
-                                    }]
-                                });
-                            });
-                        </script>
-
-                        <?php
+<?php
                         // Assuming you have already established the database connection
 
                         // Fetch the top states from the database
                         $sql = "SELECT t.bulan as bulan, SUM(fvb.biaya_purchasing) as total
                                 FROM purchasing fvb
                                 JOIN time t ON t.time_id  = fvb.time_id 
-                                WHERE t.TAHUN='2002'
+                                WHERE t.TAHUN='2001'
                                 GROUP BY t.bulan 
                                 ORDER BY SUM(fvb.biaya_purchasing) DESC
                                 LIMIT 12";
@@ -446,26 +189,30 @@ require 'koneksi.php';
 
                         $labels = array();
                         $data = array();
+                        $colors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#1aadce', '#434348', '#d35400'];
 
                         // Process the fetched data
+                        $index = 0;
                         while ($row = mysqli_fetch_assoc($result)) {
-                            $labels[] = $row['bulan'];
+                            // Convert the numeric month to a month name
+                            $monthName = DateTime::createFromFormat('!m', $row['bulan'])->format('F');
+                            $labels[] = $monthName;
                             $data[] = [
-                                'name' => $row['bulan'],
-                                'y' => (float)$row['total']
+                                'name' => $monthName,
+                                'y' => (float)$row['total'],
+                                'color' => $colors[$index % count($colors)] // Cycle through colors
                             ];
+                            $index++;
                         }
                         ?>
 
-
-                        <!-- HTML code for the chart -->
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header text-uppercase">
-                                    Purchasing Cost at 2003
+                                    Purchasing Cost at 2001
                                 </div>
                                 <div class="card-body">
-                                    <div id="highchartsContainer"></div>
+                                    <div id="pc2001Container"></div>
                                 </div>
                             </div>
                         </div>
@@ -476,7 +223,7 @@ require 'koneksi.php';
                         <script>
                             document.addEventListener("DOMContentLoaded", function () {
                                 // Generate chart using Highcharts
-                                Highcharts.chart('highchartsContainer', {
+                                Highcharts.chart('pc2001Container', {
                                     chart: {
                                         plotBackgroundColor: null,
                                         plotBorderWidth: null,
@@ -484,7 +231,7 @@ require 'koneksi.php';
                                         type: 'pie'
                                     },
                                     title: {
-                                        text: ''
+                                        text: 'Purchasing Cost at 2001'
                                     },
                                     tooltip: {
                                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -515,103 +262,267 @@ require 'koneksi.php';
                         </script>
 
 
+                        <?php
+                        // Assuming you have already established the database connection
+
+                        // Fetch the top states from the database
+                        $sql = "SELECT t.bulan as bulan, SUM(fvb.biaya_purchasing) as total
+                                FROM purchasing fvb
+                                JOIN time t ON t.time_id  = fvb.time_id 
+                                WHERE t.TAHUN='2002'
+                                GROUP BY t.bulan 
+                                ORDER BY SUM(fvb.biaya_purchasing) DESC
+                                LIMIT 12";
+                        $result = mysqli_query($connection, $sql);
+
+                        $labels = array();
+                        $data = array();
+                        $colors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#1aadce', '#434348', '#d35400'];
+
+                        // Process the fetched data
+                        $index = 0;
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            // Convert the numeric month to a month name
+                            $monthName = DateTime::createFromFormat('!m', $row['bulan'])->format('F');
+                            $labels[] = $monthName;
+                            $data[] = [
+                                'name' => $monthName,
+                                'y' => (float)$row['total'],
+                                'color' => $colors[$index % count($colors)] // Cycle through colors
+                            ];
+                            $index++;
+                        }
+                        ?>
 
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header text-uppercase">
-                                    Line Total Terendah pada Tahun 2003
+                                    Purchasing Cost at 2002
                                 </div>
                                 <div class="card-body">
-                                    <div id="highchartColumnContainer" style="height: 400px;"></div>
+                                    <div id="pc2002Container"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <?php
-                            // Query untuk mengambil data dari database
-                            $sql = "SELECT
-                                    dt.group as kelompok,
-                                    SUM(CASE WHEN t.bulan = 1 THEN f.linetotal ELSE 0 END) AS january_total,
-                                    SUM(CASE WHEN t.bulan = 2 THEN f.linetotal ELSE 0 END) AS february_total,
-                                    SUM(CASE WHEN t.bulan = 3 THEN f.linetotal ELSE 0 END) AS march_total
-                                    FROM sales f
-                                    JOIN dim_teritori dt ON dt.TerritoryID = f.TerritoryID 
-                                    JOIN time t ON t.time_id = f.time_id 
-                                    WHERE t.tahun = 2003 AND t.bulan BETWEEN 1 AND 3
-                                    GROUP BY dt.group;";
-                            $result = mysqli_query($connection, $sql);
-
-                            $labels = array();
-                            $januari = array();
-                            $februari = array();
-                            $march = array();
-
-                            // Proses hasil query
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $labels[] = $row['kelompok'];
-                                $januari[] = (float)$row['january_total'];
-                                $februari[] = (float)$row['february_total'];
-                                $march[] = (float)$row['march_total'];
-                            }
-                        ?>
-
-                        <!-- Load Highcharts Library -->
+                        <!-- Include Highcharts library -->
                         <script src="https://code.highcharts.com/highcharts.js"></script>
+
                         <script>
                             document.addEventListener("DOMContentLoaded", function () {
-                                Highcharts.chart('highchartColumnContainer', {
+                                // Generate chart using Highcharts
+                                Highcharts.chart('pc2002Container', {
                                     chart: {
-                                        type: 'column'
+                                        plotBackgroundColor: null,
+                                        plotBorderWidth: null,
+                                        plotShadow: false,
+                                        type: 'pie'
                                     },
                                     title: {
-                                        text: ''
-                                    },
-                                    subtitle: {
-                                        text: ''
-                                    },
-                                    xAxis: {
-                                        categories: <?php echo json_encode($labels); ?>,
-                                        crosshair: true,
-                                        title: {
-                                            text: 'Groups'
-                                        }
-                                    },
-                                    yAxis: {
-                                        min: 0,
-                                        title: {
-                                            text: 'Line Total'
-                                        }
+                                        text: 'Purchasing Cost at 2002'
                                     },
                                     tooltip: {
-                                        shared: true,
-                                        valuePrefix: 'Rp '
+                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    },
+                                    accessibility: {
+                                        point: {
+                                            valueSuffix: '%'
+                                        }
                                     },
                                     plotOptions: {
-                                        column: {
-                                            pointPadding: 0.2,
-                                            borderWidth: 0
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                            },
+                                            showInLegend: true
                                         }
                                     },
-                                    series: [
-                                        {
-                                            name: 'January',
-                                            data: <?php echo json_encode($januari); ?>,
-                                            // color: 'rgba(255, 99, 132, 0.7)' // Merah
-                                        },
-                                        {
-                                            name: 'February',
-                                            data: <?php echo json_encode($februari); ?>,
-                                            // color: 'rgba(54, 162, 235, 0.7)' // Biru
-                                        },
-                                        {
-                                            name: 'March',
-                                            data: <?php echo json_encode($march); ?>,
-                                            // color: 'rgba(255, 206, 86, 0.7)' // Kuning
-                                        }
-                                    ]
+                                    series: [{
+                                        name: 'Total',
+                                        colorByPoint: true,
+                                        data: <?php echo json_encode($data); ?>
+                                    }]
                                 });
                             });
                         </script>
+
+                        <?php
+                        // Assuming you have already established the database connection
+
+                        // Fetch the top states from the database
+                        $sql = "SELECT t.bulan as bulan, SUM(fvb.biaya_purchasing) as total
+                                FROM purchasing fvb
+                                JOIN time t ON t.time_id  = fvb.time_id 
+                                WHERE t.TAHUN='2003'
+                                GROUP BY t.bulan 
+                                ORDER BY SUM(fvb.biaya_purchasing) DESC
+                                LIMIT 12";
+                        $result = mysqli_query($connection, $sql);
+
+                        $labels = array();
+                        $data = array();
+                        $colors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#1aadce', '#434348', '#d35400'];
+
+                        // Process the fetched data
+                        $index = 0;
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            // Convert the numeric month to a month name
+                            $monthName = DateTime::createFromFormat('!m', $row['bulan'])->format('F');
+                            $labels[] = $monthName;
+                            $data[] = [
+                                'name' => $monthName,
+                                'y' => (float)$row['total'],
+                                'color' => $colors[$index % count($colors)] // Cycle through colors
+                            ];
+                            $index++;
+                        }
+                        ?>
+
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header text-uppercase">
+                                    Purchasing Cost at 2003
+                                </div>
+                                <div class="card-body">
+                                    <div id="pc2003Container"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Include Highcharts library -->
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                // Generate chart using Highcharts
+                                Highcharts.chart('pc2003Container', {
+                                    chart: {
+                                        plotBackgroundColor: null,
+                                        plotBorderWidth: null,
+                                        plotShadow: false,
+                                        type: 'pie'
+                                    },
+                                    title: {
+                                        text: 'Purchasing Cost at 2003'
+                                    },
+                                    tooltip: {
+                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    },
+                                    accessibility: {
+                                        point: {
+                                            valueSuffix: '%'
+                                        }
+                                    },
+                                    plotOptions: {
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                            },
+                                            showInLegend: true
+                                        }
+                                    },
+                                    series: [{
+                                        name: 'Total',
+                                        colorByPoint: true,
+                                        data: <?php echo json_encode($data); ?>
+                                    }]
+                                });
+                            });
+                        </script>
+
+                        <?php
+                        // Assuming you have already established the database connection
+
+                        // Fetch the top states from the database
+                        $sql = "SELECT t.bulan as bulan, SUM(fvb.biaya_purchasing) as total
+                                FROM purchasing fvb
+                                JOIN time t ON t.time_id  = fvb.time_id 
+                                WHERE t.TAHUN='2004'
+                                GROUP BY t.bulan 
+                                ORDER BY SUM(fvb.biaya_purchasing) DESC
+                                LIMIT 12";
+                        $result = mysqli_query($connection, $sql);
+
+                        $labels = array();
+                        $data = array();
+                        $colors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#1aadce', '#434348', '#d35400'];
+
+                        // Process the fetched data
+                        $index = 0;
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            // Convert the numeric month to a month name
+                            $monthName = DateTime::createFromFormat('!m', $row['bulan'])->format('F');
+                            $labels[] = $monthName;
+                            $data[] = [
+                                'name' => $monthName,
+                                'y' => (float)$row['total'],
+                                'color' => $colors[$index % count($colors)] // Cycle through colors
+                            ];
+                            $index++;
+                        }
+                        ?>
+
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header text-uppercase">
+                                    Purchasing Cost at 2004
+                                </div>
+                                <div class="card-body">
+                                    <div id="pc2004Container"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Include Highcharts library -->
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                // Generate chart using Highcharts
+                                Highcharts.chart('pc2004Container', {
+                                    chart: {
+                                        plotBackgroundColor: null,
+                                        plotBorderWidth: null,
+                                        plotShadow: false,
+                                        type: 'pie'
+                                    },
+                                    title: {
+                                        text: 'Purchasing Cost at 2004'
+                                    },
+                                    tooltip: {
+                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    },
+                                    accessibility: {
+                                        point: {
+                                            valueSuffix: '%'
+                                        }
+                                    },
+                                    plotOptions: {
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                            },
+                                            showInLegend: true
+                                        }
+                                    },
+                                    series: [{
+                                        name: 'Total',
+                                        colorByPoint: true,
+                                        data: <?php echo json_encode($data); ?>
+                                    }]
+                                });
+                            });
+                        </script>
+
                     </div>
                 </div>
             </main>
